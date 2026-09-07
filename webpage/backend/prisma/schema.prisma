@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ActionType {
+  RECEIVE
+  MARK_DAMAGED
+  QUARANTINE
+  RELEASE_QUARANTINE
+  ORDER_PLACED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURN_RECEIVED
+  RETURN_PASSED
+  RETURN_FAILED
+}
+
+model Location {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+model Product {
+  id         Int              @id @default(autoincrement())
+  name       String
+  sku        String           @unique
+  locationId Int
+  createdAt  DateTime         @default(now())
+  location   Location         @relation(fields: [locationId], references: [id])
+  inventory  Inventory?
+  ledger     InventoryLedger[]
+}
+
+model Inventory {
+  id          Int     @id @default(autoincrement())
+  productId   Int     @unique
+  physical    Int     @default(0)
+  reserved    Int     @default(0)
+  available   Int     @default(0)
+  inTransit   Int     @default(0)
+  returned    Int     @default(0)
+  damaged     Int     @default(0)
+  quarantined Int     @default(0)
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model InventoryLedger {
+  id         Int        @id @default(autoincrement())
+  productId  Int
+  actionType ActionType
+  quantity   Int
+  actor      String
+  timestamp  DateTime   @default(now())
+  notes      String?
+  product    Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@index([productId, timestamp])
+}

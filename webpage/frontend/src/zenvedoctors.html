@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Zenve Doctors</title>
+<style>
+  :root{
+    --purple:#6E5BF2;
+    --purple-dark:#5A47DE;
+    --bg:#F4F5F7;
+    --sidebar-bg:#FFFFFF;
+    --text-dark:#16161B;
+    --text-gray:#7A7C85;
+    --border:#E7E8EC;
+    --red:#DC3545;
+    --red-bg:#FDECEC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:#0B0B0E;
+    display:flex;
+    justify-content:center;
+    padding:24px;
+  }
+  .phone-shell{
+    width:100%;
+    max-width:1345px;
+    background:#0B0B0E;
+    border-radius:16px;
+    overflow:hidden;
+  }
+
+  /* ===== LOGIN SCREEN ===== */
+  .login-screen{
+    min-height:640px;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .login-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    width:380px;
+    max-width:100%;
+    padding:36px 32px;
+    box-shadow:0 20px 50px rgba(0,0,0,.08);
+  }
+  .login-logo-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:6px;
+  }
+  .login-brand-name{font-size:16px;font-weight:700;color:var(--text-dark);text-align:center;}
+  .login-brand-sub{font-size:12px;color:var(--text-gray);text-align:center;margin-bottom:26px;}
+  .login-title{font-size:19px;font-weight:700;color:var(--text-dark);margin:0 0 4px 0;text-align:center;}
+  .login-sub{font-size:12.5px;color:var(--text-gray);text-align:center;margin:0 0 24px 0;}
+  .login-form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .login-label{font-size:12.5px;font-weight:600;color:#3A3B44;}
+  .login-input{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:11px 13px;
+    font-size:13.5px;
+    color:var(--text-dark);
+    width:100%;
+    font-family:inherit;
+  }
+  .login-input::placeholder{color:#B4B5BE;}
+  .login-input:focus{
+    outline:none;
+    border-color:var(--purple);
+    box-shadow:0 0 0 3px rgba(110,91,242,.15);
+  }
+  .login-error{
+    background:var(--red-bg);
+    color:var(--red);
+    border:1px solid #F5C6CB;
+    border-radius:8px;
+    padding:9px 12px;
+    font-size:12px;
+    font-weight:500;
+    margin-bottom:14px;
+    display:none;
+  }
+  .login-error.show{display:block;}
+  .login-btn{
+    width:100%;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    padding:11px;
+    font-size:13.5px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:6px;
+    font-family:inherit;
+  }
+  .login-hint{
+    text-align:center;
+    font-size:11px;
+    color:#AEB0B8;
+    margin-top:16px;
+  }
+
+  /* ===== APP ===== */
+  .app{
+    display:none;
+    background:var(--bg);
+    min-height:640px;
+    position:relative;
+  }
+  .app.open{display:flex;}
+
+  /* SIDEBAR */
+  .sidebar{
+    width:230px;
+    background:var(--sidebar-bg);
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    padding:20px 16px;
+    flex-shrink:0;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 4px 22px 4px;
+  }
+  .brand-logo{
+    width:34px;height:34px;
+    border-radius:8px;
+    background:linear-gradient(135deg,var(--purple),#8B7CF6);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;font-size:15px;
+    flex-shrink:0;
+  }
+  .brand-name{font-size:14px;font-weight:700;color:var(--text-dark);}
+  .brand-sub{font-size:11px;color:var(--text-gray);}
+
+  .nav{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;
+    padding:9px 10px;
+    border-radius:8px;
+    font-size:13.5px;
+    color:#4B4D57;
+    cursor:pointer;
+    position:relative;
+    border:none;
+    background:none;
+    width:100%;
+    text-align:left;
+    font-family:inherit;
+  }
+  .nav-item .icon{width:16px;text-align:center;font-size:14px;}
+  .nav-item.active{
+    background:var(--purple);
+    color:#fff;
+    font-weight:600;
+  }
+  .nav-item .badge{
+    margin-left:auto;
+    background:#7C6CF3;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    border-radius:10px;
+    padding:1px 6px;
+  }
+
+  .sidebar-footer{margin-top:auto;display:flex;flex-direction:column;gap:10px;}
+  .caring-card{
+    background:linear-gradient(135deg,#E9E5FF,#F3EFFF);
+    border-radius:12px;
+    padding:12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12px;
+    font-weight:600;
+    color:#3B3450;
+    line-height:1.3;
+  }
+  .caring-emoji{font-size:20px;}
+  .user-card{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:8px 10px;
+  }
+  .user-avatar{
+    width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,#8B7CF6,var(--purple));
+    color:#fff;font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .user-name{font-size:12.5px;font-weight:700;color:var(--text-dark);}
+  .user-role{font-size:10.5px;color:var(--text-gray);}
+  .user-status{display:flex;align-items:center;gap:4px;font-size:10px;color:#2FB55A;}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:#2FB55A;}
+  .chev{margin-left:auto;color:var(--text-gray);font-size:11px;}
+  .logout{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:9px;
+    font-size:12.5px;
+    font-weight:600;
+    color:#3A3B44;
+    cursor:pointer;
+    background:none;
+    width:100%;
+    font-family:inherit;
+  }
+
+  /* MAIN CONTENT */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 26px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    gap:20px;
+  }
+  .topbar-left{display:flex;align-items:center;gap:14px;}
+  .menu-icon{font-size:16px;color:#5B5D68;cursor:pointer;}
+  .page-title{font-size:16px;font-weight:700;color:var(--text-dark);}
+  .page-sub{font-size:11.5px;color:var(--text-gray);}
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:8px 12px;
+    width:300px;
+    color:var(--text-gray);
+    font-size:12.5px;
+  }
+  .kbd{
+    margin-left:auto;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:5px;
+    padding:1px 6px;
+    font-size:11px;
+    color:#9FA1AA;
+  }
+  .topbar-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}
+  .icon-btn{
+    width:34px;height:34px;border-radius:9px;
+    border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;color:#5B5D68;font-size:14px;
+    background:#fff;
+  }
+  .icon-btn .dot{
+    position:absolute;top:-4px;right:-4px;
+    background:#E4483F;color:#fff;
+    font-size:9px;font-weight:700;
+    border-radius:8px;padding:1px 4px;
+  }
+  .new-visit-btn{
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    border-radius:9px;
+    padding:9px 16px;
+    font-size:12.5px;
+    font-weight:600;
+    display:flex;align-items:center;gap:6px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+
+  .content-body{flex:1;padding:20px 26px;position:relative;}
+  .error-banner{
+    background:var(--red-bg);
+    color:var(--red);
+    border:1px solid #F5C6CB;
+    border-radius:10px;
+    padding:11px 16px;
+    font-size:13px;
+    font-weight:500;
+    margin-bottom:16px;
+    display:none;
+  }
+  .error-banner.show{display:block;}
+  .toolbar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .toolbar-search{
+    display:flex;align-items:center;gap:8px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:9px 14px;
+    width:340px;
+    color:var(--text-gray);
+    font-size:12.5px;
+  }
+  .filters{display:flex;gap:8px;}
+  .filter-pill{
+    padding:7px 16px;
+    border-radius:8px;
+    font-size:12.5px;
+    font-weight:600;
+    border:1px solid var(--border);
+    background:#fff;
+    color:#5B5D68;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .filter-pill.active{background:var(--purple);color:#fff;border-color:var(--purple);}
+  .new-patient-btn{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:9px 16px;
+    font-size:12.5px;
+    font-weight:600;
+    color:#3A3B44;
+    display:flex;align-items:center;gap:6px;
+    margin-left:auto;
+    cursor:pointer;
+  }
+
+  .table-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .table-head{
+    display:grid;
+    grid-template-columns:2fr 1.5fr 1.5fr 1fr;
+    padding:12px 20px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.03em;
+    color:#A2A4AD;
+    border-bottom:1px solid var(--border);
+  }
+  .table-empty{
+    padding:60px 20px;
+    text-align:center;
+    color:#C7C8D0;
+    font-size:12.5px;
+  }
+  .table-row{
+    display:grid;
+    grid-template-columns:2fr 1.5fr 1.5fr 1fr;
+    padding:14px 20px;
+    border-bottom:1px solid var(--border);
+    align-items:center;
+    font-size:13px;
+  }
+  .table-row:last-child{border-bottom:none;}
+  .pet-cell{display:flex;align-items:center;gap:10px;}
+  .pet-avatar{
+    width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,#8B7CF6,var(--purple));
+    color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .pet-name{font-weight:600;color:var(--text-dark);}
+  .pet-meta{font-size:11.5px;color:var(--text-gray);}
+  .owner-cell{color:#3A3B44;}
+  .alerts-cell .alert-tag{
+    display:inline-block;
+    background:#FFF3E0;
+    color:#B76E00;
+    font-size:11px;
+    font-weight:600;
+    padding:3px 9px;
+    border-radius:6px;
+  }
+  .alerts-cell .no-alert{color:#C7C8D0;font-size:12px;}
+  .action-cell{
+    color:var(--purple);
+    font-weight:600;
+    font-size:12.5px;
+    cursor:pointer;
+  }
+
+  /* MODAL */
+  .modal-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(120,122,140,.35);
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    padding-top:6px;
+    z-index:10;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background:#fff;
+    border-radius:14px;
+    width:430px;
+    max-width:92%;
+    box-shadow:0 20px 50px rgba(0,0,0,.18);
+    padding:24px 26px 20px 26px;
+    max-height:92vh;
+    overflow-y:auto;
+  }
+  .modal-header{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    margin-bottom:18px;
+  }
+  .modal-title{font-size:17px;font-weight:700;color:var(--text-dark);margin:0 0 4px 0;}
+  .modal-sub{font-size:12px;color:var(--text-gray);margin:0;}
+  .modal-close{
+    font-size:16px;color:#9FA1AA;cursor:pointer;border:none;background:none;
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px 14px;
+    margin-bottom:14px;
+  }
+  .form-group{display:flex;flex-direction:column;gap:6px;}
+  .form-group.full{grid-column:1 / -1;}
+  .form-label{font-size:12.5px;font-weight:600;color:#3A3B44;}
+  .form-input,.form-select{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 12px;
+    font-size:13px;
+    color:var(--text-dark);
+    background:#fff;
+    width:100%;
+    font-family:inherit;
+  }
+  .form-input::placeholder{color:#B4B5BE;}
+  .form-input:focus,.form-select:focus{
+    outline:none;
+    border-color:var(--purple);
+    box-shadow:0 0 0 3px rgba(110,91,242,.15);
+  }
+  .create-owner-btn{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 12px;
+    font-size:13px;
+    color:#3A3B44;
+    background:#fff;
+    text-align:left;
+    cursor:pointer;
+    font-weight:500;
+    font-family:inherit;
+  }
+  .modal-footer{
+    display:flex;justify-content:flex-end;gap:10px;
+    margin-top:6px;
+  }
+  .btn-cancel{
+    border:1px solid var(--border);
+    background:#fff;
+    color:#3A3B44;
+    font-weight:600;
+    font-size:13px;
+    padding:9px 20px;
+    border-radius:9px;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-register{
+    border:none;
+    background:var(--purple);
+    color:#fff;
+    font-weight:600;
+    font-size:13px;
+    padding:9px 20px;
+    border-radius:9px;
+    cursor:pointer;
+    font-family:inherit;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-shell">
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo-row">
+        <div class="brand-logo">Z</div>
+      </div>
+      <div class="login-brand-name">Zenve Doctors</div>
+      <div class="login-brand-sub">Veterinary Practice OS</div>
+
+      <p class="login-title">Sign in</p>
+      <p class="login-sub">Use your Gmail account to access the practice.</p>
+
+      <div class="login-error" id="loginError">Incorrect email or password. Please try again.</div>
+
+      <form id="loginForm">
+        <div class="login-form-group">
+          <label class="login-label">Gmail address</label>
+          <input class="login-input" id="emailInput" type="email" placeholder="yourname@gmail.com" required>
+        </div>
+        <div class="login-form-group">
+          <label class="login-label">Password</label>
+          <input class="login-input" id="passwordInput" type="password" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="login-btn">Sign in</button>
+      </form>
+      <div class="login-hint">Enter any Gmail address and password to continue.</div>
+    </div>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div class="app" id="appScreen">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">Z</div>
+        <div>
+          <div class="brand-name">Zenve Doctors</div>
+          <div class="brand-sub">Veterinary Practice OS</div>
+        </div>
+      </div>
+
+      <ul class="nav">
+        <li><button class="nav-item"><span class="icon">▦</span>Dashboard</button></li>
+        <li><button class="nav-item"><span class="icon">▤</span>Appointments</button></li>
+        <li><button class="nav-item active" id="patientsNavBtn"><span class="icon">◔</span>Patients</button></li>
+        <li><button class="nav-item"><span class="icon">▥</span>Prescriptions</button></li>
+        <li><button class="nav-item"><span class="icon">✚</span>Vaccinations</button></li>
+        <li><button class="nav-item"><span class="icon">▢</span>Follow-ups<span class="badge"></span></button></li>
+        <li><button class="nav-item"><span class="icon">▣</span>Inventory</button></li>
+        <li><button class="nav-item"><span class="icon">⊞</span>Billing</button></li>
+        <li><button class="nav-item"><span class="icon">⚙</span>Settings</button></li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="caring-card">
+          <span class="caring-emoji">🐾</span>
+          <span>Caring for pets,<br>made simple every day.</span>
+        </div>
+        <div class="user-card">
+          <div class="user-avatar">VM</div>
+          <div>
+            <div class="user-name" id="loggedUserName">vasanth M</div>
+            <div class="user-role">Zenve Doctors</div>
+            <div class="user-status"><span class="status-dot"></span>Online</div>
+          </div>
+          <span class="chev">⌄</span>
+        </div>
+        <button class="logout" id="logoutBtn">↪ Log out</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-left">
+          <span class="menu-icon">☰</span>
+          <div>
+            <div class="page-title">Patients</div>
+            <div class="page-sub" id="patientCountLabel">0 registered pets across all owners</div>
+          </div>
+        </div>
+        <div class="search-box">
+          🔍 Search pet, Pet ID, owner, RX...
+          <span class="kbd">⌘K</span>
+        </div>
+        <div class="topbar-right">
+          <div class="icon-btn">🔔<span class="dot"></span></div>
+          <div class="icon-btn">☀</div>
+          <button class="new-visit-btn">＋ New Visit</button>
+        </div>
+      </div>
+
+      <div class="content-body">
+        <div class="error-banner show" id="errorBanner">Unable to load patients from server. Showing empty state.</div>
+
+        <div class="toolbar">
+          <div class="toolbar-search">🔍 Search by pet, Pet ID, owner...</div>
+          <div class="filters">
+            <div class="filter-pill active">All</div>
+            <div class="filter-pill">Dog</div>
+            <div class="filter-pill">Cat</div>
+          </div>
+          <button class="new-patient-btn" id="newPatientBtn">＋ New patient</button>
+        </div>
+
+        <div class="table-card">
+          <div class="table-head">
+            <div>PET</div>
+            <div>OWNER</div>
+            <div>ALERTS</div>
+            <div>ACTION</div>
+          </div>
+          <div id="tableBody">
+            <div class="table-empty" id="emptyState">No patients registered yet. Click "New patient" to add one.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL -->
+      <div class="modal-overlay" id="patientModal">
+        <div class="modal">
+          <div class="modal-header">
+            <div>
+              <p class="modal-title">Register new patient</p>
+              <p class="modal-sub">Patient and owner information is saved to the backend.</p>
+            </div>
+            <button class="modal-close" id="closeModalBtn">✕</button>
+          </div>
+
+          <form id="patientForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Pet name</label>
+                <input class="form-input" id="petName" placeholder="Enter pet name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Species</label>
+                <select class="form-select" id="petSpecies"><option>Dog</option><option>Cat</option></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Breed</label>
+                <input class="form-input" id="petBreed" placeholder="Enter breed">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Sex</label>
+                <select class="form-select" id="petSex"><option>Male</option><option>Female</option></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Date of birth</label>
+                <input class="form-input" id="petDob" type="date">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Weight (kg)</label>
+                <input class="form-input" id="petWeight" type="number" step="0.1" placeholder="Enter weight">
+              </div>
+
+              <div class="form-group full">
+                <label class="form-label">Owner</label>
+                <input class="form-input" id="petOwner" placeholder="Enter owner name" required>
+              </div>
+
+              <div class="form-group full">
+                <label class="form-label">Medical alerts</label>
+                <input class="form-input" id="petAlerts" placeholder="e.g. Allergy, Diabetes">
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+              <button type="submit" class="btn-register">Register patient</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- LOGIN ----------
+  const loginScreen = document.getElementById('loginScreen');
+  const appScreen = document.getElementById('appScreen');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loggedUserName = document.getElementById('loggedUserName');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email.toLowerCase().endsWith('@gmail.com') || password.length < 1) {
+      loginError.textContent = 'Please enter a valid Gmail address and password.';
+      loginError.classList.add('show');
+      return;
+    }
+
+    loginError.classList.remove('show');
+    const nameFromEmail = email.split('@')[0].replace(/[._]/g, ' ');
+    loggedUserName.textContent = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+
+    loginScreen.style.display = 'none';
+    appScreen.classList.add('open');
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    appScreen.classList.remove('open');
+    loginScreen.style.display = 'flex';
+    passwordInput.value = '';
+  });
+
+  // ---------- MODAL ----------
+  const modal = document.getElementById('patientModal');
+  const openModal = () => modal.classList.add('open');
+  const closeModal = () => modal.classList.remove('open');
+
+  document.getElementById('patientsNavBtn').addEventListener('click', openModal);
+  document.getElementById('newPatientBtn').addEventListener('click', openModal);
+  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  // ---------- PATIENT TABLE ----------
+  const patientForm = document.getElementById('patientForm');
+  const tableBody = document.getElementById('tableBody');
+  const emptyState = document.getElementById('emptyState');
+  const errorBanner = document.getElementById('errorBanner');
+  const patientCountLabel = document.getElementById('patientCountLabel');
+
+  let patients = [];
+
+  function initials(name){
+    return name.trim().split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+  }
+
+  function renderTable(){
+    tableBody.innerHTML = '';
+    if (patients.length === 0){
+      tableBody.appendChild(emptyState);
+      emptyState.style.display = 'block';
+    } else {
+      patients.forEach((p) => {
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.innerHTML = `
+          <div class="pet-cell">
+            <div class="pet-avatar">${initials(p.name)}</div>
+            <div>
+              <div class="pet-name">${p.name}</div>
+              <div class="pet-meta">${p.species} · ${p.breed || 'Unknown breed'} · ${p.sex}</div>
+            </div>
+          </div>
+          <div class="owner-cell">${p.owner}</div>
+          <div class="alerts-cell">${p.alerts ? `<span class="alert-tag">${p.alerts}</span>` : '<span class="no-alert">None</span>'}</div>
+          <div class="action-cell">View →</div>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+    patientCountLabel.textContent = `${patients.length} registered pet${patients.length === 1 ? '' : 's'} across all owners`;
+    if (patients.length > 0){
+      errorBanner.classList.remove('show');
+    }
+  }
+
+  patientForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('petName').value.trim();
+    const species = document.getElementById('petSpecies').value;
+    const breed = document.getElementById('petBreed').value.trim();
+    const sex = document.getElementById('petSex').value;
+    const dob = document.getElementById('petDob').value;
+    const weight = document.getElementById('petWeight').value;
+    const owner = document.getElementById('petOwner').value.trim();
+    const alerts = document.getElementById('petAlerts').value.trim();
+
+    if (!name || !owner) return;
+
+    patients.push({ name, species, breed, sex, dob, weight, owner, alerts });
+    renderTable();
+
+    patientForm.reset();
+    closeModal();
+  });
+
+  renderTable();
+</script>
+
+</body>
+</html>

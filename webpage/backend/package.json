@@ -1,0 +1,8 @@
+{
+  "name": "zenve-inventory-backend",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "node --watch src/server.js", "start": "node src/server.js", "seed": "node prisma/seed.js" },
+  "dependencies": { "@prisma/client": "latest", "cors": "latest", "dotenv": "latest", "express": "latest" },
+  "devDependencies": { "prisma": "latest" }
+}
